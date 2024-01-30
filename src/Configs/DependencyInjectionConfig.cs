@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Project.AuthSystem.API.src.Database;
 using Project.AuthSystem.API.src.Interfaces;
 using Project.AuthSystem.API.src.Models.Utils;
+using Project.AuthSystem.API.src.Services.Interfaces;
+using Project.AuthSystem.API.src.Services.UserServices;
 
 namespace Project.AuthSystem.API.src.Configs;
 public static class DependencyInjectionConfig
@@ -14,6 +16,8 @@ public static class DependencyInjectionConfig
 
     public static void RegisterServices(this IServiceCollection services)
     {
+        services.AddScoped<IUserService, UserService>();
+
         services.AddSingleton<IAppSettings, AppSettings>();
     }
 }

@@ -1,13 +1,14 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Project.AuthSystem.API.src.Models.User;
+using Project.AuthSystem.API.src.Models.Utils;
+
+namespace Project.AuthSystem.API.src.Models;
 
 [Index(nameof(Email), IsUnique = true)]
-public class User
+public class User : BaseModel
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

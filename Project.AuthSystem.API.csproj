@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +16,16 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+<ItemGroup>
+    <Folder Include="src/Configs/" />
+    <Folder Include="src/Controllers/" />
+    <Folder Include="src/Interfaces/" />
+    <Folder Include="src/Database/" />
+    <Folder Include="src/Middlewares/" />
+    <Folder Include="src/Models/" />
+    <Folder Include="src/Services/" />
   </ItemGroup>
 
 </Project>
