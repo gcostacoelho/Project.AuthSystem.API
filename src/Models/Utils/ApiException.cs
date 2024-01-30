@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 
 namespace Project.AuthSystem.API.src.Models.Utils;
