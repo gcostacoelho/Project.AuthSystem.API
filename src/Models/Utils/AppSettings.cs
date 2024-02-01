@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Project.AuthSystem.API.src.Interfaces;
 
 namespace Project.AuthSystem.API.src.Models.Utils;
