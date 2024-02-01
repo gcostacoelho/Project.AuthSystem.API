@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Project.AuthSystem.API.src.Models;
+using Project.AuthSystem.API.src.Models.Users;
 
 namespace Project.AuthSystem.API.src.Database;
 
