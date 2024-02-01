@@ -34,6 +34,10 @@ public class ApiExceptionHandlerMiddleware
                 case HttpStatusCode.NotFound:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                     break;
+
+                case HttpStatusCode.BadRequest:
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    break;
             }
 
             var result = JsonConvert.SerializeObject(responseModel);
