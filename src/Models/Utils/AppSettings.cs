@@ -9,4 +9,6 @@ public class AppSettings : IAppSettings
     {
         _config = configuration;
     }
+
+    public string HashSalt => _config["AppSettings:HashSalt"];
 }

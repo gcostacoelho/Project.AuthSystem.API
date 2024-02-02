@@ -38,7 +38,7 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateUserAsync([FromBody, Required] UserDto user, [FromHeader, Required] Guid identity)
+    public async Task<IActionResult> UpdateUserAsync([FromBody, Required] UserDtoWithoutPass user, [FromHeader, Required] Guid identity)
     {
         var response = await _userService.UpdateUserAsync(user, identity);
 
@@ -49,9 +49,9 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateUPasswordserAsync([FromHeader, Required] Guid identity, [FromHeader, Required] string newPass)
+    public async Task<IActionResult> UpdateUPasswordserAsync([FromHeader, Required] Guid identity, [FromHeader, Required] string newPass, [FromHeader, Required] string oldPass)
     {
-        var response = await _userService.UpdatePassword(identity, newPass);
+        var response = await _userService.UpdatePassword(identity, newPass, oldPass);
 
         return Ok(response);
     }
