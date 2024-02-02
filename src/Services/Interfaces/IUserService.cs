@@ -5,7 +5,7 @@ public interface IUserService
 {
     Task<User> GetUserAsync(Guid identity);
     Task<User> NewUserAsync(UserDto user);
-    Task<User> UpdateUserAsync(UserDto user, Guid identity);
+    Task<User> UpdateUserAsync(UserDtoWithoutPass user, Guid identity);
     Task DeleteUserAsync (Guid identity);
-    Task<string> UpdatePassword(Guid identity, string newPassword);
+    Task<string> UpdatePassword(Guid identity, string newPassword, string oldPassword);
 }
