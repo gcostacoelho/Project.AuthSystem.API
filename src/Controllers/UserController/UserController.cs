@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Project.AuthSystem.API.src.Models.Users;
@@ -9,6 +9,7 @@ using Project.AuthSystem.API.src.Services.Interfaces;
 namespace Project.AuthSystem.API.src.Controllers.UserController;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class UserController(IUserService userService) : ControllerBase
 {
@@ -16,6 +17,7 @@ public class UserController(IUserService userService) : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserAsync([FromHeader, Required] string email)
@@ -26,6 +28,7 @@ public class UserController(IUserService userService) : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -38,6 +41,7 @@ public class UserController(IUserService userService) : ControllerBase
 
     [HttpPut]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUserAsync([FromBody, Required] UserDtoWithoutPass user, [FromHeader, Required] string email)
@@ -49,6 +53,7 @@ public class UserController(IUserService userService) : ControllerBase
 
     [HttpPatch]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUPasswordserAsync([FromHeader, Required] string email, [FromHeader, Required] string newPass, [FromHeader, Required] string oldPass)
@@ -60,6 +65,7 @@ public class UserController(IUserService userService) : ControllerBase
 
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteUserAsync([FromHeader, Required] string email)
