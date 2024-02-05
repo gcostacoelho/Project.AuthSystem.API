@@ -22,7 +22,7 @@ public class LoginFacade(IAuthService authService, IUserService userService, IHa
             throw new ApiException(Constants.UNAUTHORIZED, HttpStatusCode.Unauthorized);
         }
 
-        var token = await _authService.GenerateTokenAsync(user);
+        var token = _authService.GenerateTokenAsync(user);
 
         return token;
     }
