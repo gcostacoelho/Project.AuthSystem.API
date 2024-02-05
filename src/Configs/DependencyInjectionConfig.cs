@@ -8,6 +8,8 @@ using Project.AuthSystem.API.src.Services.HashService;
 using Project.AuthSystem.API.src.Services.Interfaces;
 using Project.AuthSystem.API.src.Services.AuthService;
 using Project.AuthSystem.API.src.Services.UserService;
+using Project.AuthSystem.API.src.Facades.Interfaces.Login;
+using Project.AuthSystem.API.src.Facades.Login;
 
 namespace Project.AuthSystem.API.src.Configs;
 public static class DependencyInjectionConfig
@@ -23,10 +25,21 @@ public static class DependencyInjectionConfig
 
     public static void RegisterServices(this IServiceCollection services)
     {
+        #region Services
+
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IHashService, HashService>();
         services.AddScoped<IAuthService, AuthService>();
 
+        #endregion
+
+
+        #region Facades
+            
+        services.AddScoped<ILoginFacade, LoginFacade>();
+        
+        #endregion
+        
         services.AddSingleton<IAppSettings, AppSettings>();
     }
 }

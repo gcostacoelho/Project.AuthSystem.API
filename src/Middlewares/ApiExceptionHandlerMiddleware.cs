@@ -38,6 +38,10 @@ public class ApiExceptionHandlerMiddleware
                 case HttpStatusCode.BadRequest:
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     break;
+
+                case HttpStatusCode.Unauthorized:
+                    response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    break;
             }
 
             var result = JsonConvert.SerializeObject(responseModel);
