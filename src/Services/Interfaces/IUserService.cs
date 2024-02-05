@@ -3,9 +3,9 @@ using Project.AuthSystem.API.src.Models.Users;
 namespace Project.AuthSystem.API.src.Services.Interfaces;
 public interface IUserService
 {
-    Task<User> GetUserAsync(Guid identity);
+    Task<User> GetUserAsync(string email);
     Task<User> NewUserAsync(UserDto user);
-    Task<User> UpdateUserAsync(UserDtoWithoutPass user, Guid identity);
-    Task DeleteUserAsync (Guid identity);
-    Task<string> UpdatePassword(Guid identity, string newPassword, string oldPassword);
+    Task<User> UpdateUserAsync(UserDtoWithoutPass user, string email);
+    Task DeleteUserAsync (string email);
+    Task<string> UpdatePassword(string email, string newPassword, string oldPassword);
 }

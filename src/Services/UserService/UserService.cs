@@ -1,5 +1,7 @@
 using System.Net;
+
 using Microsoft.EntityFrameworkCore;
+
 using Project.AuthSystem.API.src.Database;
 using Project.AuthSystem.API.src.Models;
 using Project.AuthSystem.API.src.Models.Users;
@@ -12,9 +14,9 @@ public class UserService(AppDbContext appDbContext, IHashService hashService) : 
     private readonly AppDbContext _appDbContext = appDbContext;
     private readonly IHashService _hashService = hashService;
 
-    public async Task<User> GetUserAsync(Guid identity)
+    public async Task<User> GetUserAsync(string email)
     {
-        var user = await _appDbContext.Users.FindAsync(identity);
+        var user = await _appDbContext.Users.Where(x => x.Email == email).FirstOrDefaultAsync();
 
         if (user == null)
         {
@@ -37,9 +39,9 @@ public class UserService(AppDbContext appDbContext, IHashService hashService) : 
         return userComp;
     }
 
-    public async Task<User> UpdateUserAsync(UserDtoWithoutPass user, Guid identity)
+    public async Task<User> UpdateUserAsync(UserDtoWithoutPass user, string email)
     {
-        var userInfos = await _appDbContext.Users.FindAsync(identity);
+        var userInfos = await _appDbContext.Users.Where(x => x.Email == email).FirstOrDefaultAsync();
 
         if (userInfos == null)
         {
@@ -59,9 +61,9 @@ public class UserService(AppDbContext appDbContext, IHashService hashService) : 
         return userInfos;
     }
 
-    public async Task<string> UpdatePassword(Guid identity, string newPassword, string oldPassword)
+    public async Task<string> UpdatePassword(string email, string newPassword, string oldPassword)
     {
-        var user = await _appDbContext.Users.FindAsync(identity);
+        var user = await _appDbContext.Users.Where(x => x.Email == email).FirstOrDefaultAsync();
 
         if (user == null)
         {
@@ -78,7 +80,7 @@ public class UserService(AppDbContext appDbContext, IHashService hashService) : 
         var passwordEncripted = _hashService.EncryptyText(newPassword);
 
         await _appDbContext.Users
-            .Where(x => x.Id == identity)
+            .Where(x => x.Email == email)
             .ExecuteUpdateAsync(
                 u => u.SetProperty(p => p.Password, passwordEncripted)
         );
@@ -86,9 +88,9 @@ public class UserService(AppDbContext appDbContext, IHashService hashService) : 
         return "Senha alterada com sucesso";
     }
 
-    public async Task DeleteUserAsync(Guid identity)
+    public async Task DeleteUserAsync(string email)
     {
-        var user = await _appDbContext.Users.FindAsync(identity);
+        var user = await _appDbContext.Users.Where(x => x.Email == email).FirstOrDefaultAsync();
 
         if (user == null)
         {
