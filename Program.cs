@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Project.AuthSystem.API.src.Configs;
 using Project.AuthSystem.API.src.Middlewares;
@@ -16,7 +14,6 @@ config.SetBasePath(builder.Environment.ContentRootPath)
 
 builder.Services.RegisterServices();
 builder.Services.RegisterDatabaseConnection(config);
-builder.Services.RegisterAuthentication(config);
 
 builder.Services.AddControllers();
 
@@ -58,6 +55,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ApiExceptionHandlerMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
 
 app.UseHttpsRedirection();
 

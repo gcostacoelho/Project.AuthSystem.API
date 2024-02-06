@@ -32,8 +32,8 @@ public static class DependencyInjectionConfig
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IHashService, HashService>();
-        services.AddScoped<IAuthService, AuthService>();
 
+        services.AddSingleton<IAuthService, AuthService>();
         #endregion
 
 
@@ -44,29 +44,5 @@ public static class DependencyInjectionConfig
         #endregion
 
         services.AddSingleton<IAppSettings, AppSettings>();
-    }
-
-    public static void RegisterAuthentication(this IServiceCollection services, IConfiguration configuration)
-    {
-        var key = configuration.GetSection("AppSettings:Secret");
-        var keyEncoded = Encoding.ASCII.GetBytes(key.ToString());
-
-        services.AddAuthentication(x =>
-        {
-            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(x =>
-        {
-            x.RequireHttpsMetadata = false;
-            x.SaveToken = true;
-            x.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(keyEncoded),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-        });
     }
 }
