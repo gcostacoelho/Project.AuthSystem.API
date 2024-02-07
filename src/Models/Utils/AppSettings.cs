@@ -7,4 +7,8 @@ public class AppSettings(IConfiguration configuration) : IAppSettings
 
     public string HashSalt => _config["AppSettings:HashSalt"];
     public string Secret => _config["AppSettings:Secret"];
+
+    public string SmtpEmail => _config["AppSettings:SmtpEmail"];
+    public string SmtpUsername => _config["AppSettings:SmtpUsername"];
+    public string SmtpPassword => _config["AppSettings:SmtpPassword"];
 }
