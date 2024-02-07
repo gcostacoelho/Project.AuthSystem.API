@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Mvc;
 
 using Project.AuthSystem.API.src.Models.Utils;
 using Project.AuthSystem.API.src.Facades.Interfaces.Login;
@@ -23,18 +23,5 @@ namespace Project.AuthSystem.API.src.Controllers.AuthController
 
             return Ok(response);
         }
-
-        /* 
-        [HttpGet("validate")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ValidateTokenAsync([FromHeader, Required] string authorization)
-        {
-            var response = await _loginFacade.ValidateToken(authorization);
-
-            return Ok(response);
-        }
-        */
     }
 }

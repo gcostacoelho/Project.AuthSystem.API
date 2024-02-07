@@ -27,8 +27,7 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost]
-    [AllowAnonymous]
+    [HttpPost, AllowAnonymous]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
