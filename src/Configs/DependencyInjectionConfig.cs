@@ -13,6 +13,7 @@ using Project.AuthSystem.API.src.Facades.Login;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Project.AuthSystem.API.src.Services.SmtpService;
 
 namespace Project.AuthSystem.API.src.Configs;
 public static class DependencyInjectionConfig
@@ -32,8 +33,9 @@ public static class DependencyInjectionConfig
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IHashService, HashService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ISmtpService, SmtpService>();
 
-        services.AddSingleton<IAuthService, AuthService>();
         #endregion
 
 
