@@ -4,13 +4,10 @@ using Newtonsoft.Json;
 using Project.AuthSystem.API.src.Models.Utils;
 
 namespace Project.AuthSystem.API.src.Middlewares;
-public class ApiExceptionHandlerMiddleware
+public class ApiExceptionHandlerMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-    public ApiExceptionHandlerMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
+    private readonly RequestDelegate _next = next;
+
     public async Task Invoke(HttpContext context)
     {
         var response = context.Response;
@@ -37,6 +34,10 @@ public class ApiExceptionHandlerMiddleware
 
                 case HttpStatusCode.BadRequest:
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    break;
+
+                case HttpStatusCode.Unauthorized:
+                    response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     break;
             }
 
