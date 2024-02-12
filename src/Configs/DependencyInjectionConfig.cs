@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Project.AuthSystem.API.src.Services.SmtpService;
+using Project.AuthSystem.API.src.Facades.Interfaces.UserFacadeInterface;
+using Project.AuthSystem.API.src.Facades.UserFacade;
 
 namespace Project.AuthSystem.API.src.Configs;
 public static class DependencyInjectionConfig
@@ -42,6 +44,7 @@ public static class DependencyInjectionConfig
         #region Facades
 
         services.AddScoped<ILoginFacade, LoginFacade>();
+        services.AddScoped<IUserFacade, UserFacade>();
 
         #endregion
 

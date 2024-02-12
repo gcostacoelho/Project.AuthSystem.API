@@ -1,19 +1,19 @@
 using System.ComponentModel.DataAnnotations;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using Project.AuthSystem.API.src.Facades.Interfaces.UserFacadeInterface;
 using Project.AuthSystem.API.src.Models.Users;
 using Project.AuthSystem.API.src.Models.Utils;
-using Project.AuthSystem.API.src.Services.Interfaces;
 
 namespace Project.AuthSystem.API.src.Controllers.UserController;
-
 [ApiController]
 [Authorize]
 [Route("api/[controller]")]
-public class UserController(IUserService userService) : ControllerBase
+public class UserController(IUserFacade userFacade) : ControllerBase
 {
-    private readonly IUserService _userService = userService;
+    private readonly IUserFacade _userFacade = userFacade;
 
     [HttpGet]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
@@ -22,7 +22,7 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserAsync([FromHeader, Required] string email)
     {
-        var response = await _userService.GetUserAsync(email);
+        var response = await _userFacade.GetUserAsync(email);
 
         return Ok(response);
     }
@@ -33,7 +33,7 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> PostNewUserAsync([FromBody, Required] UserDto user)
     {
-        var response = await _userService.NewUserAsync(user);
+        var response = await _userFacade.NewUserAsync(user);
 
         return Ok(response);
     }
@@ -45,7 +45,7 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUserAsync([FromBody, Required] UserDtoWithoutPass user, [FromHeader, Required] string email)
     {
-        var response = await _userService.UpdateUserAsync(user, email);
+        var response = await _userFacade.UpdateUserAsync(user, email);
 
         return Ok(response);
     }
@@ -57,7 +57,7 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUPasswordserAsync([FromHeader, Required] string email, [FromHeader, Required] string newPass, [FromHeader, Required] string oldPass)
     {
-        var response = await _userService.UpdatePassword(email, newPass, oldPass);
+        var response = await _userFacade.UpdatePassword(email, newPass, oldPass);
 
         return Ok(response);
     }
@@ -69,7 +69,7 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteUserAsync([FromHeader, Required] string email)
     {
-        await _userService.DeleteUserAsync(email);
+        await _userFacade.DeleteUserAsync(email);
 
         return Ok();
     }
