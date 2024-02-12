@@ -1,5 +1,5 @@
 using System.Net;
-
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 
 using Project.AuthSystem.API.src.Database;
@@ -28,6 +28,13 @@ public class UserService(AppDbContext appDbContext, IHashService hashService) : 
 
     public async Task<User> NewUserAsync(UserDto user)
     {
+        var isValidEmail = ValidEmail(user.Email);
+
+        if (!isValidEmail)
+        {
+            throw new ApiException("Email not valid", HttpStatusCode.BadRequest);
+        }
+
         user.Password = _hashService.EncryptyText(user.Password);
 
         var userComp = new User(user.Email, user.Password, user.Fullname, user.Birthday);
@@ -100,5 +107,10 @@ public class UserService(AppDbContext appDbContext, IHashService hashService) : 
         _appDbContext.Users.Remove(user);
 
         await _appDbContext.SaveChangesAsync();
+    }
+
+    private static bool ValidEmail(string email)
+    {
+        return Regex.IsMatch(email, "[^@ \t\r\n]+@[^@ \t\r\n]+\\.[^@ \t\r\n]+");
     }
 }
