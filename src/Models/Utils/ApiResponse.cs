@@ -13,8 +13,8 @@ public class ApiResponse<T>
         return new ApiResponse<T> { Succeeded = false, StatusCode = statusCode, Message = errorMessage };
     }
 
-    public static ApiResponse<T> Success()
+    public static ApiResponse<T> Success(T data, HttpStatusCode httpStatusCode = HttpStatusCode.OK)
     {
-        return new ApiResponse<T> { Succeeded = true };
+        return new ApiResponse<T> { Succeeded = true, Data = data, StatusCode = httpStatusCode };
     }
 }

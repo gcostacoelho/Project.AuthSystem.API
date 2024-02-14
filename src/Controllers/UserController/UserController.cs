@@ -16,7 +16,7 @@ public class UserController(IUserFacade userFacade) : ControllerBase
     private readonly IUserFacade _userFacade = userFacade;
 
     [HttpGet]
-    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<User>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -28,7 +28,7 @@ public class UserController(IUserFacade userFacade) : ControllerBase
     }
 
     [HttpPost, AllowAnonymous]
-    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<User>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> PostNewUserAsync([FromBody, Required] UserDto user)
@@ -39,7 +39,7 @@ public class UserController(IUserFacade userFacade) : ControllerBase
     }
 
     [HttpPut]
-    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<User>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

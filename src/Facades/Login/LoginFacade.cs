@@ -24,6 +24,6 @@ public class LoginFacade(IAuthService authService, IUserService userService, IHa
 
         var token = _authService.GenerateTokenAsync(user);
 
-        return token;
+        return "Bearer " + token;
     }
 }

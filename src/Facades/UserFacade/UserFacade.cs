@@ -11,14 +11,14 @@ public class UserFacade(ISmtpService smtpService, IUserService userService) : IU
 
     private const string ACCOUNT_CREATED_SUBJECT = "{0}, conta criada com sucesso";
 
-    public async Task<User> GetUserAsync(string email)
+    public async Task<ApiResponse<User>> GetUserAsync(string email)
     {
         var user = await _userService.GetUserAsync(email);
 
-        return user;
+        return ApiResponse<User>.Success(user);
     }
 
-    public async Task<User> NewUserAsync(UserDto user)
+    public async Task<ApiResponse<User>> NewUserAsync(UserDto user)
     {
         var userResponse = await _userService.NewUserAsync(user);
 
@@ -40,7 +40,7 @@ public class UserFacade(ISmtpService smtpService, IUserService userService) : IU
             Console.WriteLine(e);
         }
 
-        return userResponse;
+        return ApiResponse<User>.Success(userResponse);
     }
 
     public async Task<string> UpdatePassword(string email, string newPassword, string oldPassword)
@@ -70,11 +70,11 @@ public class UserFacade(ISmtpService smtpService, IUserService userService) : IU
 
     }
 
-    public async Task<User> UpdateUserAsync(UserDtoWithoutPass user, string email)
+    public async Task<ApiResponse<User>> UpdateUserAsync(UserDtoWithoutPass user, string email)
     {
         var userUpdatedResponse = await _userService.UpdateUserAsync(user, email);
 
-        return userUpdatedResponse;
+        return ApiResponse<User>.Success(userUpdatedResponse);
     }
 
     public async Task DeleteUserAsync(string email)
