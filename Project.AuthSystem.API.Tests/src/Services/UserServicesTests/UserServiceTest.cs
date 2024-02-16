@@ -3,9 +3,11 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 using Project.AuthSystem.API.src.Database;
-using Project.AuthSystem.API.src.Models.Users;
 using Project.AuthSystem.API.src.Services.Interfaces;
 using Project.AuthSystem.API.src.Services.UserService;
+using Project.AuthSystem.API.src.Models;
+using Project.AuthSystem.API.src.Models.Users;
+using Project.AuthSystem.API.src.Models.Utils;
 
 namespace Project.AuthSystem.API.Tests.src.Services.UserServicesTests;
 public class UserServiceTest
@@ -15,33 +17,46 @@ public class UserServiceTest
     [Fact]
     public async void UserService_GetUserAsync_ReturnUser()
     {
-        #region Arrange
+        // Arrange
 
         var mockedUser = MockUser();
         var dbContext = await GetAppDbContextAsync();
 
         var userService = new UserService(dbContext, _hashService.Object);
 
-        #endregion
-
-        #region Act
+        // Act
 
         var result = await userService.GetUserAsync(mockedUser.Email);
 
-        #endregion
-
-        #region Assert 
+        // Assert
 
         result.Should().NotBeNull();
         result.Should().BeOfType<User>();
+    }
 
-        #endregion
+    [Fact]
+    public async void UserService_GetUserAsync_ReturnApiException()
+    {
+        // Arrange
+
+        var dbContext = await GetAppDbContextAsync();
+
+        var userService = new UserService(dbContext, _hashService.Object);
+
+        // Act
+
+        Func<Task> result = async () => await userService.GetUserAsync("teste");
+
+        // Assert
+
+        await result.Should().ThrowAsync<ApiException>()
+            .WithMessage(Constants.USER_NOT_FOUND_MESSAGE);
     }
 
     [Fact]
     public async void UserService_NewUserAsync_ReturnUser()
     {
-        #region Arrange
+        // Arrange
 
         var dbContext = await GetAppDbContextAsync();
 
@@ -52,26 +67,40 @@ public class UserServiceTest
 
         _hashService.Setup(x => x.EncryptyText(user.Password)).Returns("stringgg");
 
-        #endregion
-
-        #region Act
+        // Act
 
         var result = await userService.NewUserAsync(user);
 
-        #endregion
-
-        #region Assert 
+        // Assert
 
         result.Should().NotBeNull();
         result.Should().BeOfType<User>();
+    }
 
-        #endregion
+    [Fact]
+    public async void UserService_NewUserAsync_ReturnApiException()
+    {
+        // Arrange
+
+        var dbContext = await GetAppDbContextAsync();
+
+        var userService = new UserService(dbContext, _hashService.Object);
+
+        var user = new UserDto { Email = "teste", Password = "rooot", Fullname = "Teste Teste Teste", Birthday = DateTime.UtcNow };
+
+        // Act
+
+        Func<Task> result = async () => await userService.GetUserAsync("teste");
+
+        // Assert
+
+        await result.Should().ThrowAsync<ApiException>();
     }
 
     [Fact]
     public async void UserService_UpdateUserAsync_ReturnUser()
     {
-        #region Arrange
+        // Arrange
 
         var mockedUser = MockUser();
 
@@ -80,29 +109,42 @@ public class UserServiceTest
 
         var userUpdateBody = new UserDtoWithoutPass { Email = "test@gmail.com", Fullname = "John Doe", Birthday = DateTime.UtcNow };
 
-        #endregion
-
-        #region Act
+        // Act
 
         var result = await userService.UpdateUserAsync(userUpdateBody, mockedUser.Email);
 
-        #endregion
-
-        #region Assert
+        // Assert
 
         result.Should().NotBeNull();
 
         result.Email.Should().Be(userUpdateBody.Email);
         result.Fullname.Should().Be(userUpdateBody.Fullname);
         result.Birthday.Should().Be(userUpdateBody.Birthday);
+    }
 
-        #endregion
+    [Fact]
+    public async void UserService_UpdateUserAsync_ReturnApiException()
+    {
+        // Arrange
+
+        var dbContext = await GetAppDbContextAsync();
+        var userService = new UserService(dbContext, _hashService.Object);
+
+        var userUpdateBody = new UserDtoWithoutPass { Email = "test@gmail.com", Fullname = "John Doe", Birthday = DateTime.UtcNow };
+
+        // Act
+
+        Func<Task> result = async () => await userService.UpdateUserAsync(userUpdateBody, "teste");
+
+        // Assert
+
+        await result.Should().ThrowAsync<ApiException>().WithMessage(Constants.USER_NOT_FOUND_MESSAGE);
     }
 
     [Fact]
     public async void UserService_UpdatePasswordAsync_ReturnString()
     {
-        #region Arrange
+        // Arrange
 
         var newPass = "JaneDoe1234";
         var mockedUser = MockUser();
@@ -113,47 +155,96 @@ public class UserServiceTest
         _hashService.Setup(x => x.CompareHashes(mockedUser.Password, mockedUser.Password)).Returns(true);
         _hashService.Setup(x => x.EncryptyText(newPass)).Returns("stringgg");
 
-        #endregion
-
-        #region Act
+        // Act
 
         var result = await userService.UpdatePassword(mockedUser.Email, newPass, mockedUser.Password);
 
-        #endregion
-
-        #region Assert
+        // Assert
 
         result.Should().NotBeNull();
         result.Should().BeOfType<string>();
-        #endregion
     }
 
     [Fact]
-    public async void UserService_DeleteUser_ReturnVoid()
+    public async void UserService_UpdatePasswordAsync_ReturnApiExceptionUserNotFound()
     {
-        #region Arrange
+        // Arrange
+
+        var newPass = "JaneDoe1234";
+        var mockedUser = MockUser();
+
+        var dbContext = await GetAppDbContextAsync();
+        var userService = new UserService(dbContext, _hashService.Object);
+
+        // Act
+
+        Func<Task> result = async () => await userService.UpdatePassword("teste", newPass, mockedUser.Password);
+
+        // Assert
+
+        await result.Should().ThrowAsync<ApiException>().WithMessage(Constants.USER_NOT_FOUND_MESSAGE);
+    }
+
+    [Fact]
+    public async void UserService_UpdatePasswordAsync_ReturnApiExceptionPasswordNotEqual()
+    {
+        // Arrange
+
+        var newPass = "JaneDoe1234";
+        var mockedUser = MockUser();
+
+        var dbContext = await GetAppDbContextAsync();
+        var userService = new UserService(dbContext, _hashService.Object);
+
+        _hashService.Setup(x => x.CompareHashes(mockedUser.Password, newPass)).Returns(false);
+
+        // Act
+
+        Func<Task> result = async () => await userService.UpdatePassword(mockedUser.Email, newPass, mockedUser.Password);
+
+        // Assert
+
+        await result.Should().ThrowAsync<ApiException>().WithMessage(Constants.NOT_POSSIBLE_CHANGE);
+    }
+
+    [Fact]
+    public async void UserService_DeleteUserAsync_ReturnVoid()
+    {
+        // Arrange
 
         var mockedUser = MockUser();
 
         var dbContext = await GetAppDbContextAsync();
         var userService = new UserService(dbContext, _hashService.Object);
 
-        #endregion
-
-        #region Act
+        // Act
 
         await userService.DeleteUserAsync(mockedUser.Email);
 
-        #endregion
-
-        #region Assert
+        // Assert
 
         // ! How to test this? Because this method is a Task without return
 
         Assert.True(true);
-
-        #endregion
     }
+
+    [Fact]
+    public async void UserService_DeleteUserAsync_ReturnApiException()
+    {
+        // Arrange
+
+        var dbContext = await GetAppDbContextAsync();
+        var userService = new UserService(dbContext, _hashService.Object);
+
+        // Act
+
+        Func<Task> result = async () => await userService.DeleteUserAsync("teste");
+
+        // Assert
+
+        await result.Should().ThrowAsync<ApiException>().WithMessage(Constants.USER_NOT_FOUND_MESSAGE);
+    }
+
 
     private static async Task<AppDbContext> GetAppDbContextAsync()
     {
