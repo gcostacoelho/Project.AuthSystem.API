@@ -86,11 +86,11 @@ public class UserService(AppDbContext appDbContext, IHashService hashService) : 
 
         var passwordEncripted = _hashService.EncryptyText(newPassword);
 
-        await _appDbContext.Users
-            .Where(x => x.Email == email)
-            .ExecuteUpdateAsync(
-                u => u.SetProperty(p => p.Password, passwordEncripted)
-        );
+        user.Password = passwordEncripted;
+
+        _appDbContext.Entry(user).Property(x => x.Password).IsModified = true;
+
+        await _appDbContext.SaveChangesAsync();
 
         return "Senha alterada com sucesso";
     }
